@@ -1,8 +1,8 @@
 class MyHashMap {
-    vector<int> h{vector<int>(1e6 + 1, -1)};
+    vector<int> h;
 public:
    
-    MyHashMap() {
+    MyHashMap(): h(1e6+1, -1){
     }
     
     void put(int key, int value) {  
