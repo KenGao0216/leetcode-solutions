@@ -17,11 +17,7 @@ public:
         if(!root) return ans;
         ans.push_back(root->val);
         if(root->left) findLeft(root->left);
-        for(int &i:ans) cout<<i<<" ";
-        cout<<endl;
         if(root->left || root->right) findLeaves(root);
-        for(int &i:ans) cout<<i<<" ";
-        cout<<endl;
         if(root->right) findRight(root->right);
         for(int i = r.size()-1; i>=0; --i) ans.push_back(r[i]);
         return ans;
