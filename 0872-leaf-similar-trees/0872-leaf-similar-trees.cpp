@@ -20,7 +20,7 @@ public:
 
     void dfs(TreeNode* root, vector<int>&v){
         if(!root) return;
-        if(!root->left && !root->right)  v.push_back(root->val);
+        if(!root->left && !root->right)  {v.push_back(root->val); return;}
         if(root->left) dfs(root->left, v);
         if(root->right) dfs(root->right, v);
     }
