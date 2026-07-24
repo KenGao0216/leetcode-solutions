@@ -25,13 +25,10 @@ public:
         if(!back && !front) {
             front = new Node(value);
             back = front;
-            back->next = front;
         }
         else{
             back->next = new Node(value);
-            back->next->next = front;
             back = back->next;
-            
         }
         size++;
         return true;
@@ -46,7 +43,6 @@ public:
         }
         else{
         front = front->next;
-        back->next = front;
         }
         delete tmp;
         size--;
