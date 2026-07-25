@@ -1,68 +1,81 @@
 class LRUCache {
-    class Node{
-        public: 
-            int key;
-            int value;
-            Node* prev;
-            Node *next;
-            Node(int k, int v): key(k), value(v), prev(nullptr), next(nullptr){}
+    struct Node{
+        int key;
+        Node *next;
+        Node *prev;
+
+        Node(int k): key{k}, next{nullptr}, prev{nullptr}{}
     };
-public:
+    // front-> first -> ... -> ... last <- LRU (dummy)
+    Node *front;
+    Node *LRU;
+    unordered_map<int,int>m;
+    unordered_map<int, Node*>m1;
+    int size;
     int cap;
-    unordered_map<int, Node*>mp;
-    Node* head;
-    Node* tail;
+public:
     LRUCache(int capacity) {
+        front = new Node (-2);
+        LRU = new Node(-1);
+        front->next = LRU;
+        LRU->prev = front;
+        size = 0;
         cap = capacity;
-        head = new Node(-1,-1);
-        tail = new Node (-1,-1);
-        head->next = tail;
-        tail->prev = head;
     }
     
     int get(int key) {
-        if(!mp.count(key)) return -1;
-        Node *node = mp[key];
-        MTF(node);
-        return node->value;
+        if(!m.count(key)) return -1;
+        Node *cur = m1[key];
+        Node* cur_next = cur->next;
+        Node *cur_prev = cur->prev;
+        cur_next->prev = cur_prev;
+        cur_prev->next = cur_next;
+        Node *front_next = front->next;
+        front->next = cur;
+        cur->prev = front;
+        cur->next = front_next;
+        front_next->prev = cur;
+        m1[key] = cur;
+        return m[key];
     }
     
     void put(int key, int value) {
-        if(mp.count(key)){
-            Node *node = mp[key];
-            node->value = value;
-            MTF(node);
-        }
+        if(!m.count(key)){
+            Node *newNode = new Node(key);
+            newNode->next = front->next;
+            newNode->prev = front;
+            front->next->prev = newNode;
+            front->next = newNode;
+            size++;
+            m[key] = value;
+            m1[key] = newNode;
+            if(size==1) LRU->prev = front->next;
+            if(size>cap) {
+                    Node *tmp = LRU->prev;
+                    Node *tmp1 = tmp->prev;
+                    LRU->prev = tmp1;
+                    tmp1->next = LRU;
+                    m.erase(tmp->key);
+                    m1.erase(tmp->key);
+                    delete tmp;
+                    size--;
+                }
+        }   
         else{
-            if(mp.size() == cap){
-                Node * lru = removeLRU();
-                mp.erase(lru->key);
-                delete lru;
-            }
-            Node *node = new Node(key, value);
-            mp[key] = node;
-            ATF(node);
-        }
-    }
+            Node *cur = m1[key];
+            Node* cur_next = cur->next;
+            Node *cur_prev = cur->prev;
+            cur_next->prev = cur_prev;
+            cur_prev->next = cur_next;
+            Node *front_next = front->next;
+            front->next = cur;
+            cur->prev = front;
+            cur->next = front_next;
+            front_next->prev = cur;
 
-    void remove(Node* node){
-        node->prev->next =node->next;
-        node->next->prev = node->prev;
-    }
-    void ATF(Node *node){
-        node->next = head->next;
-        node->prev = head;
-        head->next->prev = node;
-        head->next = node;
-    }
-    void MTF(Node *node){
-        remove(node);
-        ATF(node);
-    }
-    Node* removeLRU() {
-        Node* lru = tail->prev;
-        remove(lru);
-        return lru;
+            m1[key] = cur;
+            m[key] = value;
+        }        
     }
 };
 
