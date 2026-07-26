@@ -56,7 +56,8 @@ public:
        Node *target = pred[0]->next[0];
        if(!target || target->val != num) return false;
        for(int l = 0; l<target->next.size(); ++l){
-            if(pred[l]->next[l] == target) pred[l]->next[l] = target->next[l];
+            if(pred[l]->next[l] != target) break;
+            pred[l]->next[l] = target->next[l];
        }
        delete target;
        return true;
