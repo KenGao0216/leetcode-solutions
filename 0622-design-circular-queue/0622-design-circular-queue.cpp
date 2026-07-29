@@ -1,60 +1,55 @@
 class MyCircularQueue {
+
     struct Node{
         int val;
         Node *next;
-        Node(int v): val{v}, next{nullptr}{}
+        Node(int v): val(v), next(nullptr){}
     };
 
+public:
     Node *front;
     Node *back;
     int size;
     int cap;
-
-public:
-
-
     MyCircularQueue(int k) {
         front = nullptr;
         back = nullptr;
         size = 0;
         cap = k;
     }
-    
+    //1 -> 2 -> 3 
     bool enQueue(int value) {
         if(size==cap) return false;
-        if(!back && !front) {
+        if(size==0) {
             front = new Node(value);
             back = front;
-        }
-        else{
-            back->next = new Node(value);
-            back = back->next;
+        }else{
+            Node *newNode = new Node(value);
+            back->next = newNode;
+            back = newNode;
         }
         size++;
         return true;
     }
     
     bool deQueue() {
-        if(isEmpty()) return false;
-        Node *tmp = front;
-        if(size==1){
-            front = nullptr;
-            back = nullptr;
-        }
+        if(size==0) return false;
+        if(size==1) {delete front;}
         else{
+        Node *tmp = front;
         front = front->next;
-        }
         delete tmp;
+        }
         size--;
         return true;
     }
     
     int Front() {
-        return isEmpty()? -1: front->val;
+        return size && front? front->val: -1;
     }
     
     int Rear() {
-        return isEmpty()? -1: back->val;
+        return size && back? back->val:-1;
     }
     
     bool isEmpty() {
@@ -62,8 +57,7 @@ public:
     }
     
     bool isFull() {
-        return size == cap;
-
+        return size>=cap;
     }
 };
 
