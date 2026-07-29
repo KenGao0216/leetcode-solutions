@@ -1,37 +1,33 @@
 class OrderManagementSystem {
-
-    struct Order{
-        string type;
-        int price;
-        Order(string t, int p): type{t}, price{p}{}
-    };
-
-    unordered_map<int, Order>m; //orderid->order
-    unordered_map<string, unordered_map<int, unordered_set<int>>>m1; //all orderids of type and price
 public:
+    unordered_map<string, unordered_map<int,unordered_set<int>>>m;
+    unordered_map<int,pair<string, int>>side;
     OrderManagementSystem() {
         
     }
     
     void addOrder(int orderId, string orderType, int price) {
-        m.emplace(orderId, Order(orderType, price));
-        m1[orderType][price].insert(orderId);
+        m[orderType][price].insert(orderId);
+        side[orderId] = {orderType, price};
+
     }
     
     void modifyOrder(int orderId, int newPrice) {
-        m1[m.at(orderId).type][m.at(orderId).price].erase(orderId);
-        m.at(orderId).price = newPrice;
-        m1[m.at(orderId).type][m.at(orderId).price].insert(orderId);
+        string type = side[orderId].first;
+        int price = side[orderId].second;
+        m[type][price].erase(orderId);
+        m[type][newPrice].insert(orderId);
+        side[orderId].second = newPrice;
     }
     
     void cancelOrder(int orderId) {
-        m1[m.at(orderId).type][m.at(orderId).price].erase(orderId);
-        m.erase(orderId);
+        string type = side[orderId].first;
+        int price = side[orderId].second;
+        m[type][price].erase(orderId);
     }
     
     vector<int> getOrdersAtPrice(string orderType, int price) {
-        const auto& orders = m1[orderType][price];
-        return vector<int>(orders.begin(), orders.end());
+        return vector<int>(m[orderType][price].begin(), m[orderType][price].end());
     }
 };
 
