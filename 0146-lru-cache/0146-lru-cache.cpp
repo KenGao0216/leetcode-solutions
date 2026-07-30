@@ -46,9 +46,10 @@ public:
         Node *newNode = new Node(key,value);
         node[key] = newNode;
         newNode->next = front->next;
-        newNode->prev = front;
+        
         front->next->prev = newNode;
         front->next = newNode;
+        newNode->prev = front;
         size++;
         if(size>cap){
             Node *tmp = back->prev;
