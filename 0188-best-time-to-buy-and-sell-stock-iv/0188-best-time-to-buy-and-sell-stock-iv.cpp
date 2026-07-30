@@ -8,7 +8,7 @@ public:
         buy[0] = -prices[0];
         sell[0] = 0;
         for(int i = 1; i<n; ++i){
-            for(int j = k; j>=1; --j){
+            for(int j = 1; j<=k; ++j){
                     buy[j] =  max(buy[j], sell[j]-prices[i]);
                     sell[j] = max(sell[j], buy[j-1]+prices[i]);
             }
