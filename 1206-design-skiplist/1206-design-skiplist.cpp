@@ -1,66 +1,63 @@
 class Skiplist {
-    static const int ML = 16;
+    
     struct Node{
         int val;
         vector<Node*>next;
-        Node(int v, int l): val(v), next(l, nullptr){}
+        Node(int v, int l){
+            val = v;
+            next.resize(l, nullptr);
+        }
     };
 public:
-    Node *head;
-
+    const int ML = 16;
+    Node *head; 
+    
     Skiplist() {
-        head = new Node(-1, ML);
+        head= new Node(-1, ML);
     }
     
     bool search(int target) {
         Node *cur = head;
-        for(int l = ML-1; l>=0; l--){
-            while(cur->next[l] && cur->next[l]->val < target) cur = cur->next[l];
+        for(int lvl = ML-1; lvl>=0; lvl--){
+            while(cur->next[lvl] && cur->next[lvl]->val < target) cur = cur->next[lvl];
         }
-        //cur is on bottom level and is less than target, move 1 step forward
         cur = cur->next[0];
         return cur && cur->val == target;
     }
     
     void add(int num) {
-       vector<Node*>pred(ML);
-       Node *cur = head;
-       for(int l = ML-1; l>=0; l--){
-            while(cur->next[l] && cur->next[l]->val < num) cur = cur->next[l]; // ----> 
-            pred[l] = cur;
-            // |
-            // |
-            // v
-       }
-       int lvl = 1;
-       while(lvl <ML && rand()%2) lvl++;
-       Node *newNode = new Node(num, lvl);
-       for(int l = 0; l<lvl; ++l){
-            Node *prev = pred[l];
-            Node *prev_next = prev->next[l];
-            prev->next[l] = newNode;
-            newNode->next[l] = prev_next;
-       }
+        vector<Node*>pred(ML);
+        Node *cur = head;
+        for(int lvl = ML-1; lvl>=0; lvl--){
+            while(cur->next[lvl] && cur->next[lvl]->val < num) cur = cur->next[lvl];
+            pred[lvl]=cur;
+        }
+        int l= 1;
+        while(l<ML && rand() %2) ++l;
+        Node *newNode = new Node(num, l);
+        for(int i = 0; i<l; ++i){
+            Node *nxt = pred[i]->next[i];
+            pred[i]->next[i] = newNode;
+            newNode->next[i] = nxt;
+        }
     }
-
+    
     bool erase(int num) {
-       vector<Node*>pred(ML);
-       Node *cur = head;
-       for(int l = ML-1; l>=0; l--){
-            while(cur->next[l] && cur->next[l]->val < num) cur = cur->next[l]; // ----> 
-            pred[l] = cur;
-            // |
-            // |
-            // v
-       }
-       Node *target = pred[0]->next[0];
-       if(!target || target->val != num) return false;
-       for(int l = 0; l<target->next.size(); ++l){
-            if(pred[l]->next[l] != target) break;
-            pred[l]->next[l] = target->next[l];
-       }
-       delete target;
-       return true;
+        vector<Node*>pred(ML);
+        Node *cur = head;
+        for(int lvl = ML-1; lvl>=0; lvl--){
+            while(cur->next[lvl] && cur->next[lvl]->val < num) cur = cur->next[lvl];
+            pred[lvl] =cur;
+        }
+        Node *target = pred[0]->next[0];
+        if(!target || target->val != num) return false;
+
+        for(int i = 0; i<target->next.size(); ++i){
+            if(pred[i]->next[i]->val!=num) break;
+            pred[i]->next[i] = target->next[i];
+        }
+        delete target;
+        return true;
     }
 };
 
