@@ -49,14 +49,14 @@ public:
             while(cur->next[lvl] && cur->next[lvl]->val < num) cur = cur->next[lvl];
             pred[lvl] =cur;
         }
-        Node *target = pred[0]->next[0];
-        if(!target || target->val != num) return false;
+        cur = cur->next[0];
+        if(!cur || cur->val != num) return false;
 
-        for(int i = 0; i<target->next.size(); ++i){
+        for(int i = 0; i<cur->next.size(); ++i){
             if(pred[i]->next[i]->val!=num) break;
-            pred[i]->next[i] = target->next[i];
+            pred[i]->next[i] = cur->next[i];
         }
-        delete target;
+        delete cur;
         return true;
     }
 };
