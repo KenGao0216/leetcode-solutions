@@ -10,7 +10,7 @@ public:
             dp[i] = dp[i-1];
             if(future[i]<=present[i]) continue;
             for(int j = budget; j>=present[i]; --j){
-                dp[i][j] = max(dp[i-1][j], dp[i-1][j-present[i]]+future[i]-present[i]);
+                if(dp[i-1][j-present[i]] != -1e6) dp[i][j] = max(dp[i-1][j], dp[i-1][j-present[i]]+future[i]-present[i]);
             }
         }
         return *max_element(dp[n-1].begin(), dp[n-1].end());
