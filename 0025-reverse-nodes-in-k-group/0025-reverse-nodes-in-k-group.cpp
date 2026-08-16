@@ -14,7 +14,7 @@ public:
         if(k==1) return head;
         ListNode *cur = head;
         ListNode *ans = nullptr;
-        ListNode *prevEnd = head;
+        ListNode *prevEnd = nullptr;
         bool once = false;
         while(true){
             ListNode *nextGroup = cur;
@@ -29,7 +29,7 @@ public:
                 cur = nxt; 
             }
             if(!ans) ans = prev;
-            prevEnd->next = prev; 
+            if(prevEnd) prevEnd->next = prev; 
             start->next = nextGroup;
             prevEnd = start;
         }
