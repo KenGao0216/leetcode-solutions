@@ -73,7 +73,7 @@ class AllOne {
     int newFreq = oldFreq - 1;
 
     Node* cur = m[oldFreq];
-    Node* next = cur->next;   // lower-frequency neighbor
+    Node* next = cur->next;
 
     cur->keys.erase(key);
 
