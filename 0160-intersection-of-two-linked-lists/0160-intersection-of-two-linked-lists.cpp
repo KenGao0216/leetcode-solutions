@@ -9,15 +9,12 @@
 class Solution {
 public:
     ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
-        map<ListNode*, int>m;
-        ListNode *ans =nullptr;
-        ListNode *cur = headA;
-        while(cur) {m[cur]++; cur = cur->next;}
-        cur = headB;
-        while(cur) {m[cur]++; cur = cur->next;}
-        //for(auto [x,y]: m) cout<<x->val<<" "<<y<<"\n";
-        for(auto [x,y]:m) if(y==2) {ans = x; break;} 
-        
-        return ans ;
+        ListNode *a = headA;
+        ListNode *b = headB;
+        while(a!=b){
+            a = a ? a->next : headB;
+            b = b? b->next : headA;
+        }
+        return a ;
     }
 };
