@@ -15,7 +15,7 @@ public:
         while(cur) {m[cur]++; cur = cur->next;}
         cur = headB;
         while(cur) {m[cur]++; cur = cur->next;}
-        for(auto [x,y]: m) cout<<x->val<<" "<<y<<"\n";
+        //for(auto [x,y]: m) cout<<x->val<<" "<<y<<"\n";
         for(auto [x,y]:m) if(y==2) {ans = x; break;} 
         
         return ans ;
