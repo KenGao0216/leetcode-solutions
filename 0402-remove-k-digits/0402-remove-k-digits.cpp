@@ -13,12 +13,7 @@ public:
             id++;
             
         }
-        if(k>0){
-            if(k>=st.size()) return "0";
-            else {
-                while(k>0) {st.pop_back(); --k;}
-            }
-        }
+        st.resize(st.size()-k);
         while(id<num.length()) {st.push_back(num[id]); ++id;}
         if(st.empty()) return "0";
         int i = 0;
