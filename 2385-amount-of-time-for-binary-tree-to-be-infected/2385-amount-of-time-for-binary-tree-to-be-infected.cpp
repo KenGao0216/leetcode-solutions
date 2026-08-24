@@ -11,9 +11,11 @@
  */
 class Solution {
 public:
-    unordered_map<int, vector<TreeNode*>>m;
-    unordered_map<int, bool>vis;
+    vector<vector<int>>m;
+    vector<bool>vis;
     int amountOfTime(TreeNode* root, int start) {
+        m.resize(1e5+5, {});
+        vis.resize(1e5+5, false);
         int ans = 0;
         dfs(root, nullptr);
         queue<pair<int, int>>q;
@@ -24,7 +26,7 @@ public:
             vis[cur.first] = true;
             ans = max(ans, cur.second);
             for(auto nxt: m[cur.first]){
-                if(!vis[nxt->val]) q.push({nxt->val, cur.second+1});
+                if(!vis[nxt]) q.push({nxt, cur.second+1});
             }
         }
         
@@ -34,9 +36,9 @@ public:
     void dfs(TreeNode * root, TreeNode * par){
             if(!root) return;
             vis[root->val] = false;
-            if(par) m[root->val].push_back(par);
-            if(root->left) m[root->val].push_back(root->left);
-            if(root->right) m[root->val].push_back(root->right);
+            if(par) m[root->val].push_back(par->val);
+            if(root->left) m[root->val].push_back(root->left->val);
+            if(root->right) m[root->val].push_back(root->right->val);
             dfs(root->left, root);
             dfs(root->right, root);
     }
