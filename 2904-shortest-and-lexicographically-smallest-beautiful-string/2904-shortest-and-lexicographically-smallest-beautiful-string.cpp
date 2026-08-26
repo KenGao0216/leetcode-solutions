@@ -4,7 +4,6 @@ public:
         vector<int>v;
         for(int i = 0; i<s.length(); ++i) if(s[i] == '1') v.push_back(i);
 
-        for(int i:v) cout<<i<<" ";
         int len = INT_MAX;
         string ans(s.length(), '1');
         if(v.size()<k) return "";
