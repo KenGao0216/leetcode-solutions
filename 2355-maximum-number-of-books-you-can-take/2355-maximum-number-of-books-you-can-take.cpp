@@ -2,24 +2,23 @@ class Solution {
 public:
     long long maximumBooks(vector<int>& books) {
         int n = books.size();
-        if(n==1) return books[0];
-        vector<long long>dp(n, 0);
-        dp[0] = books[0];
-        stack<int>s;
-        s.push(0);
-        for(int i = 1; i<n; ++i){
-            while(!s.empty() && books[s.top()] >= books[i] - (i-s.top())) s.pop();
+        long long ans = 0;
+        stack<pair<int,long long>>s;
+        for(int i = 0; i<n; ++i){
+            long long cur;
+            while(!s.empty() && books[s.top().first] >= books[i] - (i-s.top().first)) s.pop();
             if(s.empty()) {
                 long long len = min(i+1, books[i]);
-                dp[i] = 1LL*books[i] * len - (len * (len-1))/2;
+                cur = 1LL*books[i] * len - (len * (len-1))/2;
             }
             else {
-                int j = s.top();
+                int j = s.top().first;
                 long long len = i-j;
-                dp[i] = dp[j] + 1LL*books[i] * len - (len * (len-1))/2;
+                cur = s.top().second + 1LL*books[i] * len - (len * (len-1))/2;
             }
-            s.push(i);
+            ans = max(ans, cur);
+            s.push({i, cur});
         }
-        return *max_element(dp.begin(), dp.end());
+        return ans;
     }
 };
