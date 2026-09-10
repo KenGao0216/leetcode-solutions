@@ -8,13 +8,9 @@ public:
         }
         vector<pair<int,int>>v;
         for(auto[x,y]:m){
-            cout<<x<<": ";
-            for(int z:y) cout<<z<<" ";
-            cout<<endl;
             v.push_back({y[0], y.back()});
         }
         sort(v.begin(), v.end());
-        for(auto x:v) cout<<"("<<x.first<<","<<x.second<<") ";
         int l = v[0].first, r = v[0].second;
         for(auto x:v){
             if(x.first >= l && x.first <= r && x.second > r){
