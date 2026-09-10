@@ -7,7 +7,6 @@ public:
         while(l<=r){
             int m = (l+r)/2;
             int x = f(m, weights);
-            cout<<m<<" "<<x<<endl;
             if(x <= days){
                 ans = min(ans, m);
                 r = m-1;
