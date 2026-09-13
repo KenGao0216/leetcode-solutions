@@ -8,7 +8,7 @@ public:
                 dp[i] = min(dp[i], dp[i-j*j]+1);
             }
         }
-        for(int i: dp) cout<<i<<" ";
+        //for(int i: dp) cout<<i<<" ";
         return dp[n];
     }
 };
