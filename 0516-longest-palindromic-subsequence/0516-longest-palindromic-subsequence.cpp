@@ -4,7 +4,6 @@ public:
         int n =s.length();
         vector<vector<int>>dp(n+1, vector<int>(n+1, 0));
         for(int i = 0; i<n; ++i){
-            if(i <n-1 && s[i] == s[i+1]) dp[i][i+1] = 2;
             dp[i][i] = 1;
         }
         for(int i = n-1; i>=0; --i){
