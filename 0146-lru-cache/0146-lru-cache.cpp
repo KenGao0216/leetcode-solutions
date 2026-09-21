@@ -1,65 +1,64 @@
 class LRUCache {
-    struct Node{
-        int key;
-        int val;
-        Node *next;
-        Node *prev;
-        Node(int k,int v): key(k),val(v), next(nullptr), prev(nullptr){}
-    };
-    Node *front;
-    Node *back;
-    int size;
-    int cap;
-    unordered_map<int, Node*>node;
 public:
+    struct Node{
+        int key, val; 
+        Node *next, *prev;
+        Node(int k, int v): key{k}, val{v}{}
+    };
+    Node *head, *tail;
+    unordered_map<int, Node*>m; //key -> Node 
+    int cap, sz;
     LRUCache(int capacity) {
-        front= new Node(-1,-1);
-        back = new Node(-1,-1);
-        front->next = back;
-        back->prev = front;
-        size= 0;
+        head = new Node(-1, -1);
+        tail = new Node(-1,-1);
+        head->next = tail;
+        tail->prev = head;
         cap = capacity;
+        sz= 0;
     }
+
     
     int get(int key) {
-        if(!node.count(key)) return -1;
-        Node *cur = node[key];
-        Node *cur_prev = cur->prev;
-        Node *cur_next = cur->next;
-        cur_prev->next = cur_next;
-        cur_next->prev = cur_prev;
-        cur->next = front->next;
-        cur->prev = front;
-        front->next->prev = cur;
-        front->next = cur;
+        if(!m[key]) return -1;
+        Node *cur = m[key];
+        unlink(cur);
+        mtf(cur);
         return cur->val;
     }
     
     void put(int key, int value) {
+        if(m[key]){
+            Node *cur = m[key];
+            cur->val = value;
+            unlink(cur);
+            mtf(cur);
+        }
+        else{
+            sz++;
+            if(sz>cap){
+                //evict
+                Node *lru =tail->prev;
+                unlink(lru);
+                m.erase(lru->key);
+                delete lru;
+                sz--;
+            }
+            Node *cur = new Node(key, value);
+            m[key] = cur;
+            mtf(cur);
+        }
+    }
+    
+    void unlink(Node *cur){
+        cur->prev->next = cur->next;
+        cur->next->prev = cur->prev;
+    }
 
-        if(node.count(key)){
-            node[key]->val = value;
-            int x = get(key);
-            return;
-        }
-        
-        Node *newNode = new Node(key,value);
-        node[key] = newNode;
-        newNode->next = front->next;
-        
-        front->next->prev = newNode;
-        front->next = newNode;
-        newNode->prev = front;
-        size++;
-        if(size>cap){
-            Node *tmp = back->prev;
-            Node *back_prev_prev = back->prev->prev;
-            back_prev_prev->next = back;
-            back->prev = back_prev_prev;
-            node.erase(tmp->key);
-            delete tmp;
-            size--;
-        }
+    void mtf(Node *cur){
+        cur->next = head->next;
+        cur->prev = head;
+        head->next->prev = cur;
+        head->next = cur;
     }
 };
 
